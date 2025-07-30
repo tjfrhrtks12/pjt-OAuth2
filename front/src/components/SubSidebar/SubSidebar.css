@@ -1,0 +1,143 @@
+.sub-sidebar {
+  position: fixed;
+  top: 60px;
+  left: 70px;
+  width: 160px;
+  height: calc(100vh - 60px);
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+  box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+  z-index: 1100;
+  transition: left 0.4s cubic-bezier(0.4,0,0.2,1), z-index 0.3s;
+  border-radius: 0 18px 18px 0;
+  animation: subSidebarSlideIn 0.4s;
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-sidebar.behind {
+  z-index: 900;
+}
+
+.sub-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 18px 10px 18px;
+  font-weight: 700;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: #764ba2;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+.close-btn:hover {
+  color: #ff5e62;
+}
+
+.sub-sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0 10px;
+  flex: 1;
+}
+
+.sub-sidebar-item {
+  padding: 14px 12px;
+  margin: 6px 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.15);
+  color: #333;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sub-sidebar-item:hover {
+  background: #fff;
+  color: #764ba2;
+}
+
+.sub-sidebar-item.expanded {
+  background: #fff;
+  color: #764ba2;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sub-sidebar-label {
+  margin-left: 4px;
+}
+
+.expand-arrow {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+  color: #764ba2;
+}
+
+.expand-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.sub-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 20px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.sub-menu-item {
+  padding: 10px 12px;
+  margin: 4px 0;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #333;
+  font-weight: 400;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.sub-menu-item:hover {
+  background: rgba(255,255,255,0.2);
+  color: #764ba2;
+}
+
+.sub-menu-label {
+  margin-left: 4px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subSidebarSlideIn {
+  from { transform: translateX(-40px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .sub-sidebar {
+    top: 50px;
+    left: 60px;
+    width: 120px;
+    height: calc(100vh - 50px);
+  }
+} 
