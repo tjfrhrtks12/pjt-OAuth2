@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from typing import List, Dict, Optional
-from models import Teacher, Student
+from models import Teacher, Student, ExamScore
 from config import engine
 
 # 세션 팩토리 생성
@@ -150,6 +150,89 @@ class DatabaseService:
                     "score": student.score
                 }
                 for student in students
+            ]
+        finally:
+            db.close()
+
+    # 새로운 exam_scores 관련 메서드들
+    @staticmethod
+    def get_all_exam_scores() -> List[Dict]:
+        """모든 시험 성적 정보 조회"""
+        db = SessionLocal()
+        try:
+            exam_scores = db.query(ExamScore).all()
+            return [
+                {
+                    "id": score.id,
+                    "student_name": score.student_name,
+                    "subject": score.subject,
+                    "exam_type": score.exam_type,
+                    "score": score.score
+                }
+                for score in exam_scores
+            ]
+        finally:
+            db.close()
+
+    @staticmethod
+    def get_exam_scores_by_student(student_name: str) -> List[Dict]:
+        """특정 학생의 시험 성적 조회"""
+        db = SessionLocal()
+        try:
+            exam_scores = db.query(ExamScore).filter(
+                ExamScore.student_name == student_name
+            ).all()
+            return [
+                {
+                    "id": score.id,
+                    "student_name": score.student_name,
+                    "subject": score.subject,
+                    "exam_type": score.exam_type,
+                    "score": score.score
+                }
+                for score in exam_scores
+            ]
+        finally:
+            db.close()
+
+    @staticmethod
+    def get_exam_scores_by_subject(subject: str) -> List[Dict]:
+        """특정 과목의 시험 성적 조회"""
+        db = SessionLocal()
+        try:
+            exam_scores = db.query(ExamScore).filter(
+                ExamScore.subject == subject
+            ).all()
+            return [
+                {
+                    "id": score.id,
+                    "student_name": score.student_name,
+                    "subject": score.subject,
+                    "exam_type": score.exam_type,
+                    "score": score.score
+                }
+                for score in exam_scores
+            ]
+        finally:
+            db.close()
+
+    @staticmethod
+    def get_exam_scores_by_exam_type(exam_type: str) -> List[Dict]:
+        """특정 시험 유형의 성적 조회"""
+        db = SessionLocal()
+        try:
+            exam_scores = db.query(ExamScore).filter(
+                ExamScore.exam_type == exam_type
+            ).all()
+            return [
+                {
+                    "id": score.id,
+                    "student_name": score.student_name,
+                    "subject": score.subject,
+                    "exam_type": score.exam_type,
+                    "score": score.score
+                }
+                for score in exam_scores
             ]
         finally:
             db.close() 
