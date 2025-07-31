@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from config import get_db, engine, Base
-from models import Teacher, Student
+from models import User
 from auth import router as auth_router
 from chatbot import router as chatbot_router
 import uvicorn
@@ -12,7 +12,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Last Project API",
-    description="FastAPI with MySQL Backend",
+    description="FastAPI with MySQL Backend - User Authentication",
     version="1.0.0"
 )
 
@@ -44,41 +44,24 @@ async def health_check():
 async def get_version():
     return {"version": "1.0.0", "framework": "FastAPI"}
 
-@app.get("/api/debug/students")
-async def debug_students(db: Session = Depends(get_db)):
-    """DB에 있는 모든 학생 데이터를 확인하는 디버그 엔드포인트"""
+@app.get("/api/debug/users")
+async def debug_users(db: Session = Depends(get_db)):
+    """DB에 있는 모든 사용자 데이터를 확인하는 디버그 엔드포인트"""
     try:
-        students = db.query(Student).all()
-        student_list = []
-        for student in students:
-            student_list.append({
-                "id": student.id,
-                "name": student.student_name,
-                "grade": student.student_grade,
-                "phone": student.student_phone
+        users = db.query(User).all()
+        user_list = []
+        for user in users:
+            user_list.append({
+                "id": user.id,
+                "email": user.email,
+                "name": user.name,
+                "google_id": user.google_id,
+                "is_active": user.is_active,
+                "created_at": user.created_at
             })
         return {
-            "count": len(student_list),
-            "students": student_list
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/api/debug/teachers")
-async def debug_teachers(db: Session = Depends(get_db)):
-    """DB에 있는 모든 교사 데이터를 확인하는 디버그 엔드포인트"""
-    try:
-        teachers = db.query(Teacher).all()
-        teacher_list = []
-        for teacher in teachers:
-            teacher_list.append({
-                "id": teacher.id,
-                "teacher_id": teacher.teacher_id,
-                "name": teacher.teacher_name
-            })
-        return {
-            "count": len(teacher_list),
-            "teachers": teacher_list
+            "count": len(user_list),
+            "users": user_list
         }
     except Exception as e:
         return {"error": str(e)}

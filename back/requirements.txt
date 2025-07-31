@@ -5,4 +5,8 @@ pymysql
 python-multipart
 python-dotenv
 openai
-httpx 
+httpx
+python-jose[cryptography]
+passlib[bcrypt]
+python-jose[cryptography]
+requests 

@@ -66,6 +66,7 @@
 .nav-right {
   display: flex;
   align-items: center;
+  gap: 15px;
 }
 
 .tai-button {
@@ -139,9 +140,30 @@
   letter-spacing: 1px;
 }
 
-/* 사이드바 확장 시 네비게이션바 고정 */
-.main-sidebar.expanded ~ .main-content-wrapper .navigation-bar {
-  left: 0;
+/* 사용자 메뉴 스타일 */
+.user-menu-container {
+  position: relative;
+}
+
+.user-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.user-menu-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
 }
 
 /* 반응형 디자인 */

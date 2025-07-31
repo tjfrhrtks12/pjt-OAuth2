@@ -70,6 +70,34 @@
   animation: fadeInUp 0.8s ease-out;
 }
 
+.user-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid rgba(102, 126, 234, 0.2);
+  object-fit: cover;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+  border-color: rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.welcome-text {
+  text-align: left;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -181,6 +209,20 @@
     padding: 70px 15px 30px 15px;
   }
   
+  .user-welcome {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .user-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .welcome-text {
+    text-align: center;
+  }
+  
   .welcome-section h2 {
     font-size: 2rem;
   }
@@ -206,5 +248,10 @@
   
   .welcome-section p {
     font-size: 1rem;
+  }
+  
+  .user-avatar {
+    width: 50px;
+    height: 50px;
   }
 } 

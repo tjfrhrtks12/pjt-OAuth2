@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import Chatbot from '../Chatbot';
 import MainSidebar from '../MainSidebar';
 import NavigationBar from '../NavigationBar';
@@ -8,14 +9,15 @@ import './MainPage.css';
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [selectedMenuItem, setSelectedMenuItem] = useState<string>('');
   const [isSidebarExpanded, setIsSidebarExpanded] = useState<boolean>(false);
   const [showSubSidebar, setShowSubSidebar] = useState<boolean>(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState<boolean>(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
   };
 
   const handleSidebarSelect = (item: string) => {
@@ -46,11 +48,22 @@ const MainPage: React.FC = () => {
         isMainSidebarExpanded={isSidebarExpanded}
       />
       <div className="main-content-wrapper">
-        <NavigationBar onTAIClick={handleTAIClick} />
+        <NavigationBar onTAIClick={handleTAIClick} onLogout={handleLogout} user={user} />
         <main className="main-content">
           <div className="welcome-section">
-            <h2>환영합니다! 👋</h2>
-            <p>교사 관리 시스템에 로그인되었습니다.</p>
+            <div className="user-welcome">
+              {user?.picture && (
+                <img 
+                  src={user.picture} 
+                  alt={user.name} 
+                  className="user-avatar"
+                />
+              )}
+              <div className="welcome-text">
+                <h2>환영합니다, {user?.name || '사용자'}님! 👋</h2>
+                <p>{user?.email || '교사 관리 시스템에 로그인되었습니다.'}</p>
+              </div>
+            </div>
           </div>
           <div className="dashboard-grid">
             <div className="dashboard-card">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import MainSidebar from '../MainSidebar';
 import NavigationBar from '../NavigationBar';
 import SubSidebar from '../SubSidebar/SubSidebar';
@@ -8,15 +9,16 @@ import './StudentManagementPage.css';
 
 const StudentManagementPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [selectedMenuItem, setSelectedMenuItem] = useState<string>('grade1');
   const [isSidebarExpanded, setIsSidebarExpanded] = useState<boolean>(false);
   const [showSubSidebar, setShowSubSidebar] = useState<boolean>(true);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [isChatbotOpen, setIsChatbotOpen] = useState<boolean>(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
   };
 
   const handleSidebarSelect = (item: string) => {
@@ -55,7 +57,11 @@ const StudentManagementPage: React.FC = () => {
         isMainSidebarExpanded={isSidebarExpanded}
       />
       <div className="student-management-content-wrapper">
-        <NavigationBar onTAIClick={handleTAIClick} />
+        <NavigationBar 
+          onTAIClick={handleTAIClick} 
+          onLogout={handleLogout}
+          user={user}
+        />
         
         <main className="student-management-content">
           <div className="page-header">
