@@ -6,6 +6,11 @@ from models import User
 from auth import router as auth_router
 from chatbot import router as chatbot_router
 import uvicorn
+import os
+from dotenv import load_dotenv
+
+# 환경변수 로드
+load_dotenv()
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -44,27 +49,36 @@ async def health_check():
 async def get_version():
     return {"version": "1.0.0", "framework": "FastAPI"}
 
-@app.get("/api/debug/users")
-async def debug_users(db: Session = Depends(get_db)):
-    """DB에 있는 모든 사용자 데이터를 확인하는 디버그 엔드포인트"""
-    try:
-        users = db.query(User).all()
-        user_list = []
-        for user in users:
-            user_list.append({
-                "id": user.id,
-                "email": user.email,
-                "name": user.name,
-                "google_id": user.google_id,
-                "is_active": user.is_active,
-                "created_at": user.created_at
-            })
-        return {
-            "count": len(user_list),
-            "users": user_list
+@app.get("/api/status")
+async def get_system_status():
+    """시스템 전체 상태 확인"""
+    from database_service import DatabaseService
+    
+    db_status = DatabaseService.get_database_info()
+    
+    return {
+        "database": db_status,
+        "oauth": {
+            "provider": "google",
+            "status": "ready",
+            "client_id": os.getenv("GOOGLE_CLIENT_ID", "설정되지 않음")
+        },
+        "ai": {
+            "status": "connected",
+            "model": "gpt-4o"
+        },
+        "server": {
+            "status": "running",
+            "framework": "FastAPI"
         }
-    except Exception as e:
-        return {"error": str(e)}
+    }
+
+@app.get("/api/oauth/google/url")
+async def get_google_oauth_url():
+    """Google OAuth2 로그인 URL 반환"""
+    from oauth_service import OAuthService
+    auth_url = OAuthService.get_google_auth_url()
+    return {"auth_url": auth_url}
 
 if __name__ == "__main__":
     uvicorn.run(
