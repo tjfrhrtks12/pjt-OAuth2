@@ -17,6 +17,9 @@ class User(BaseModel):
     name = Column(String(255), nullable=False)
     picture = Column(String(500), nullable=True)
     google_id = Column(String(255), unique=True, nullable=True, index=True)
+    google_access_token = Column(String(2000), nullable=True)  # Google 액세스 토큰
+    google_refresh_token = Column(String(2000), nullable=True)  # Google 리프레시 토큰
+    google_token_expires_at = Column(DateTime(timezone=True), nullable=True)  # 토큰 만료 시간
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now()) 

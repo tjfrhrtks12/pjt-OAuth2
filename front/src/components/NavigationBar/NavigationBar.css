@@ -4,15 +4,15 @@
   left: 0;
   right: 0;
   height: 60px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   z-index: 999;
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
@@ -33,8 +33,8 @@
 .brand-text {
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #333;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: 2px;
   position: relative;
   overflow: hidden;
@@ -43,9 +43,9 @@
 }
 
 .brand-text:hover {
-  color: #ffd700;
-  text-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
-  transform: scale(1.05);
+  color: #555;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
 }
 
 .brand-text::before {
@@ -73,9 +73,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  color: #333;
   padding: 10px 20px;
   border-radius: 25px;
   cursor: pointer;
@@ -102,22 +102,22 @@
 }
 
 .tai-button:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .tai-button.active {
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  border-color: #ffd700;
-  color: #333;
-  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+  border-color: #adb5bd;
+  color: #495057;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .tai-button.active:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .tai-icon {
@@ -148,22 +148,108 @@
 .user-menu-button {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 25px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #333;
+  padding: 1px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.6rem;
   font-weight: 600;
   transition: all 0.3s ease;
+  width: 16px;
+  height: 16px;
+  justify-content: center;
 }
 
 .user-menu-button:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.user-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* 드롭다운 메뉴 스타일 */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  margin-top: 8px;
+  min-width: 120px;
+  z-index: 1000;
+  animation: fadeInUp 0.2s ease-out;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: #f8f9fa;
+  color: #667eea;
+}
+
+.logout-button {
+  color: #dc3545;
+}
+
+.logout-button:hover {
+  background: #fff5f5;
+  color: #dc3545;
+}
+
+.logout-icon {
+  font-size: 1rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 반응형 디자인 */
@@ -185,6 +271,12 @@
   
   .tai-icon {
     font-size: 1rem;
+  }
+  
+  .user-menu-button {
+    width: 14px;
+    height: 14px;
+    padding: 0px;
   }
   
   .main-sidebar.expanded ~ .main-content-wrapper .navigation-bar {

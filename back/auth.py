@@ -51,9 +51,10 @@ async def google_callback(code: str, db: Session = Depends(get_db)):
         
         print(f"Google 사용자 정보 조회 성공: {user_info.get('email')}")
         
-        # DB에서 사용자 조회 또는 생성
-        user = OAuthService.get_or_create_user(db, user_info)
+        # DB에서 사용자 조회 또는 생성 (토큰 포함)
+        user = OAuthService.get_or_create_user(db, user_info, tokens)
         print(f"사용자 처리 완료: ID={user.id}, 이메일={user.email}")
+        print(f"Google 토큰 저장 완료: 액세스 토큰={bool(user.google_access_token)}, 리프레시 토큰={bool(user.google_refresh_token)}")
         
         # JWT 토큰 생성
         token_data = {

@@ -18,7 +18,7 @@ class OAuthService:
             "client_id": GOOGLE_CLIENT_ID,
             "redirect_uri": GOOGLE_REDIRECT_URI,
             "response_type": "code",
-            "scope": "openid email profile",
+            "scope": "openid email profile https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events",
             "access_type": "offline",
             "prompt": "consent"
         }
@@ -60,7 +60,7 @@ class OAuthService:
             return None
     
     @staticmethod
-    def get_or_create_user(db: Session, google_user_info: Dict) -> User:
+    def get_or_create_user(db: Session, google_user_info: Dict, tokens: Dict = None) -> User:
         """Google 사용자 정보로 DB에서 사용자 조회 또는 생성"""
         # Google ID로 기존 사용자 찾기
         user = db.query(User).filter(User.google_id == google_user_info.get("id")).first()
@@ -85,5 +85,15 @@ class OAuthService:
                 db.add(user)
                 db.commit()
                 db.refresh(user)
+        
+        # 토큰 정보 업데이트 (있는 경우)
+        if tokens:
+            user.google_access_token = tokens.get("access_token")
+            user.google_refresh_token = tokens.get("refresh_token")
+            if tokens.get("expires_in"):
+                from datetime import datetime, timedelta
+                user.google_token_expires_at = datetime.utcnow() + timedelta(seconds=tokens.get("expires_in"))
+            db.commit()
+            db.refresh(user)
         
         return user 

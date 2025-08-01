@@ -5,6 +5,7 @@ import Chatbot from '../Chatbot';
 import MainSidebar from '../MainSidebar';
 import NavigationBar from '../NavigationBar';
 import SubSidebar from '../SubSidebar/SubSidebar';
+import Calendar from '../Calendar';
 import './MainPage.css';
 
 const MainPage: React.FC = () => {
@@ -14,6 +15,7 @@ const MainPage: React.FC = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState<boolean>(false);
   const [showSubSidebar, setShowSubSidebar] = useState<boolean>(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState<boolean>(false);
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
   const handleLogout = async () => {
     await logout();
@@ -22,8 +24,16 @@ const MainPage: React.FC = () => {
 
   const handleSidebarSelect = (item: string) => {
     setSelectedMenuItem(item);
-    if (item === 'grade1') setShowSubSidebar(true);
-    else setShowSubSidebar(false);
+    if (item === 'grade1') {
+      setShowSubSidebar(true);
+      setShowCalendar(false);
+    } else if (item === 'schedule') {
+      setShowCalendar(true);
+      setShowSubSidebar(false);
+    } else {
+      setShowSubSidebar(false);
+      setShowCalendar(false);
+    }
   };
 
   const handleTAIClick = () => {
@@ -50,22 +60,10 @@ const MainPage: React.FC = () => {
       <div className="main-content-wrapper">
         <NavigationBar onTAIClick={handleTAIClick} onLogout={handleLogout} user={user} />
         <main className="main-content">
-          <div className="welcome-section">
-            <div className="user-welcome">
-              {user?.picture && (
-                <img 
-                  src={user.picture} 
-                  alt={user.name} 
-                  className="user-avatar"
-                />
-              )}
-              <div className="welcome-text">
-                <h2>환영합니다, {user?.name || '사용자'}님! 👋</h2>
-                <p>{user?.email || '교사 관리 시스템에 로그인되었습니다.'}</p>
-              </div>
-            </div>
-          </div>
-          <div className="dashboard-grid">
+          {showCalendar ? (
+            <Calendar isVisible={showCalendar} />
+          ) : (
+            <div className="dashboard-grid">
             <div className="dashboard-card">
               <div className="card-icon">👨‍🏫</div>
               <h3>교사 관리</h3>
@@ -91,6 +89,7 @@ const MainPage: React.FC = () => {
               <button className="card-button">설정하기</button>
             </div>
           </div>
+          )}
         </main>
       </div>
       <Chatbot isOpen={isChatbotOpen} onClose={handleChatbotClose} />

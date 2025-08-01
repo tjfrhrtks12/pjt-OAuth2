@@ -95,11 +95,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log('AuthContext - 인증 확인 성공, 토큰 유지');
     } catch (error) {
       console.error('AuthContext - 인증 확인 실패:', error);
-      // 실패했을 때만 토큰 제거
-      setToken(null);
-      setUser(null);
-      setIsAuthenticated(false);
-      console.log('AuthContext - 인증 실패로 토큰 제거');
+      // 토큰이 유효하지 않을 때만 제거 (401, 403 오류)
+      if (axios.isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 403)) {
+        setToken(null);
+        setUser(null);
+        setIsAuthenticated(false);
+        console.log('AuthContext - 인증 실패로 토큰 제거');
+      } else {
+        // 네트워크 오류 등은 토큰 유지
+        console.log('AuthContext - 네트워크 오류, 토큰 유지');
+      }
     }
   }, [token]);
 

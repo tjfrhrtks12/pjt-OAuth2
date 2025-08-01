@@ -76,16 +76,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onTAIClick, onLogout, use
                 {user?.name?.charAt(0) || 'U'}
               </div>
             )}
-            <span className="user-name">{user?.name || '사용자'}</span>
-            <span className="dropdown-arrow">▼</span>
           </button>
 
           {showUserMenu && (
             <div className="user-dropdown">
-              <div className="user-info">
-                <div className="user-email">{user?.email}</div>
-              </div>
-              <div className="dropdown-divider"></div>
               <button 
                 className="dropdown-item logout-button"
                 onClick={handleLogoutClick}

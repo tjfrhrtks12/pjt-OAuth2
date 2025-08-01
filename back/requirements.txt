@@ -8,5 +8,8 @@ openai
 httpx
 python-jose[cryptography]
 passlib[bcrypt]
-python-jose[cryptography]
-requests 
+requests
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client 

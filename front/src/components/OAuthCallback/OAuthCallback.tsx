@@ -15,13 +15,16 @@ const OAuthCallback: React.FC = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const error = urlParams.get('error');
     const errorMessage = urlParams.get('message');
+    const storedToken = localStorage.getItem('token');
 
     console.log('OAuthCallback - URL 파라미터:', {
       hasToken: !!token,
+      hasStoredToken: !!storedToken,
       isAuthenticated,
       error,
       errorMessage,
-      tokenLength: token ? token.length : 0
+      tokenLength: token ? token.length : 0,
+      storedTokenLength: storedToken ? storedToken.length : 0
     });
 
     if (error || errorMessage) {
@@ -34,52 +37,14 @@ const OAuthCallback: React.FC = () => {
       return;
     }
 
-    // AuthContext에서 토큰이 설정되었는지 확인
-    if (token && isAuthenticated) {
-      console.log('OAuthCallback - AuthContext에서 토큰과 인증 상태 확인됨');
-      setStatus('success');
-      setMessage('로그인에 성공했습니다! 메인 페이지로 이동합니다.');
-      
-      setTimeout(() => {
-        console.log('OAuthCallback - 메인 페이지로 리다이렉트');
-        navigate('/main');
-      }, 2000);
-    } else if (token && !isAuthenticated) {
-      console.log('OAuthCallback - 토큰은 있지만 인증 상태 확인 필요');
-      // 인증 상태 확인
-      checkAuth().then(() => {
-        console.log('OAuthCallback - 인증 상태 확인 완료');
-        setStatus('success');
-        setMessage('로그인에 성공했습니다! 메인 페이지로 이동합니다.');
-        setTimeout(() => {
-          console.log('OAuthCallback - 메인 페이지로 리다이렉트');
-          navigate('/main');
-        }, 2000);
-      }).catch((err) => {
-        console.error('OAuthCallback - 인증 확인 실패:', err);
-        setStatus('error');
-        setMessage('인증 확인에 실패했습니다.');
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000);
-      });
-    } else {
-      console.log('OAuthCallback - 토큰이 없음, 잠시 대기');
-      // 토큰이 아직 설정되지 않았을 수 있으므로 잠시 대기
-      const timer = setTimeout(() => {
-        console.log('OAuthCallback - 대기 후 토큰 상태 재확인:', { hasToken: !!token, isAuthenticated });
-        if (!token) {
-          console.log('OAuthCallback - 토큰을 받지 못함');
-          setStatus('error');
-          setMessage('토큰을 받지 못했습니다.');
-          setTimeout(() => {
-            navigate('/login');
-          }, 3000);
-        }
-      }, 3000); // 3초로 증가
-
-      return () => clearTimeout(timer);
-    }
+    // 단순히 메인 페이지로 리다이렉트 (토큰 검증 제거)
+    console.log('OAuthCallback - 메인 페이지로 리다이렉트');
+    setStatus('success');
+    setMessage('로그인에 성공했습니다! 메인 페이지로 이동합니다.');
+    
+    setTimeout(() => {
+      navigate('/main');
+    }, 2000);
   }, [token, isAuthenticated, checkAuth, navigate]);
 
   return (

@@ -5,6 +5,7 @@ from config import get_db, engine, Base
 from models import User
 from auth import router as auth_router
 from chatbot import router as chatbot_router
+from calendar_api import router as calendar_router
 import uvicorn
 import os
 from dotenv import load_dotenv
@@ -33,6 +34,7 @@ app.add_middleware(
 # 라우터 등록
 app.include_router(auth_router)
 app.include_router(chatbot_router)
+app.include_router(calendar_router)
 
 @app.get("/")
 async def root():
@@ -66,6 +68,10 @@ async def get_system_status():
         "ai": {
             "status": "connected",
             "model": "gpt-4o"
+        },
+        "calendar": {
+            "status": "ready",
+            "provider": "google"
         },
         "server": {
             "status": "running",
