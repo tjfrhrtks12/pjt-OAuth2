@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginPage from './components/LoginPage';
 import MainPage from './components/MainPage';
 import StudentManagementPage from './components/StudentManagementPage';
-import OAuthCallback from './components/OAuthCallback';
+
 import './App.css';
 
 // 보호된 라우트 컴포넌트
@@ -15,16 +15,20 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 // 메인 앱 컴포넌트
 const AppRoutes: React.FC = () => {
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/auth/callback" element={<OAuthCallback />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route 
         path="/main" 
         element={
           <ProtectedRoute>
-            <MainPage />
+            <MainPage 
+              isSidebarExpanded={isSidebarExpanded}
+              onSidebarExpandChange={setIsSidebarExpanded}
+            />
           </ProtectedRoute>
         } 
       />
@@ -36,6 +40,7 @@ const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         } 
       />
+
     </Routes>
   );
 };

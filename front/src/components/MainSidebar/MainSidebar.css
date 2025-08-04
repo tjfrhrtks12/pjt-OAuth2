@@ -1,7 +1,7 @@
 .main-sidebar {
   width: 70px;
   height: calc(100vh - 60px);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5b9bd5 0%, #4a90e2 100%);
   position: fixed;
   left: 0;
   top: 60px;
@@ -13,7 +13,7 @@
 }
 
 .main-sidebar.expanded {
-  width: 250px;
+  width: 230px;
 }
 
 .main-sidebar:hover {
@@ -85,74 +85,54 @@
 }
 
 .sidebar-item:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: white;
   transform: translateX(5px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-item.active {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
   color: white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  border-left: 4px solid #ffd700;
-}
-
-.sidebar-item.active::after {
-  content: '';
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  background: #ffd700;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  border-left: 4px solid #ffffff;
 }
 
 .sidebar-icon {
   font-size: 1.2rem;
   margin-right: 0;
-  width: 24px;
-  text-align: center;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   transition: all 0.3s ease;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
 }
 
 .main-sidebar.expanded .sidebar-icon {
   margin-right: 12px;
 }
 
-/* 숫자 아이콘 스타일 */
 .sidebar-item:nth-child(1) .sidebar-icon,
 .sidebar-item:nth-child(2) .sidebar-icon,
 .sidebar-item:nth-child(3) .sidebar-icon {
+  font-weight: bold;
+  font-size: 1.4rem;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  font-weight: 700;
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  min-width: 28px;
-  min-height: 28px;
-  flex-shrink: 0;
 }
 
 .sidebar-label {
-  font-weight: 500;
-  font-size: 0.95rem;
-  letter-spacing: 0.5px;
   opacity: 0;
-  transform: translateX(-20px);
+  transform: translateX(-10px);
   transition: all 0.3s ease;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .sidebar-label.visible {
@@ -160,12 +140,9 @@
   transform: translateX(0);
 }
 
-/* 반응형 디자인 */
 @media (max-width: 768px) {
   .main-sidebar {
     width: 60px;
-    height: calc(100vh - 50px);
-    top: 50px;
   }
   
   .main-sidebar.expanded {
@@ -187,34 +164,31 @@
   }
 }
 
-/* 스크롤바 스타일링 */
 .main-sidebar::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .main-sidebar::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
 }
 
 .main-sidebar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .main-sidebar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* 애니메이션 효과 */
 @keyframes slideIn {
   from {
-    transform: translateX(-100%);
     opacity: 0;
+    transform: translateX(-20px);
   }
   to {
-    transform: translateX(0);
     opacity: 1;
+    transform: translateX(0);
   }
 }
 
@@ -224,7 +198,6 @@
 
 .sidebar-item {
   animation: slideIn 0.3s ease-out;
-  animation-fill-mode: both;
 }
 
 .sidebar-item:nth-child(1) { animation-delay: 0.1s; }

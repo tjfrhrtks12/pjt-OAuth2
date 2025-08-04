@@ -24,7 +24,7 @@
 }
 
 .chatbot-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5b9bd5;
   color: white;
   padding: 20px;
   display: flex;
@@ -123,7 +123,7 @@
 }
 
 .message.user .message-content {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5b9bd5;
   color: white;
   border-bottom-right-radius: 6px;
 }
@@ -166,7 +166,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #667eea;
+  background: #5b9bd5;
   animation: typing 1.4s infinite ease-in-out;
 }
 
@@ -190,7 +190,7 @@
   border-top: 1px solid #e1e5e9;
   display: flex;
   gap: 10px;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .chatbot-input textarea {
@@ -198,42 +198,77 @@
   border: 2px solid #e1e5e9;
   border-radius: 20px;
   padding: 12px 16px;
+  padding-right: 20px;
   font-size: 14px;
   resize: none;
   outline: none;
   transition: all 0.3s ease;
   font-family: inherit;
-  max-height: 100px;
+  min-height: 44px;
+  max-height: 154px;
+  line-height: 1.4;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .chatbot-input textarea:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #5b9bd5;
+  box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.1);
 }
 
 .chatbot-input textarea::placeholder {
   color: #999;
 }
 
+.chatbot-input textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatbot-input textarea::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
+  border-radius: 4px;
+}
+
+.chatbot-input textarea::-webkit-scrollbar-thumb {
+  background: rgba(91, 155, 213, 0.4);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  min-height: 20px;
+}
+
+.chatbot-input textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(91, 155, 213, 0.6);
+}
+
+.chatbot-input textarea::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 .send-button {
+  background: #5b9bd5;
+  color: white;
+  border: none;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  color: white;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  transition: all 0.3s ease;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(91, 155, 213, 0.2);
 }
 
 .send-button:hover:not(:disabled) {
+  background: #4a90e2;
   transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(91, 155, 213, 0.3);
 }
 
 .send-button:disabled {

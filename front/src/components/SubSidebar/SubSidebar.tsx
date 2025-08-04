@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import './SubSidebar.css';
 
 interface SubSidebarProps {
-  visible: boolean;
-  onClose: () => void;
-  isMainSidebarExpanded: boolean;
+  visible?: boolean;
+  onClose?: () => void;
+  isMainSidebarExpanded?: boolean;
 }
 
 const menuItems = [
@@ -20,7 +20,11 @@ const subMenuItems = [
   { id: 'timetable', label: '시간표', icon: '📅' }
 ];
 
-const SubSidebar: React.FC<SubSidebarProps> = ({ visible, onClose, isMainSidebarExpanded }) => {
+const SubSidebar: React.FC<SubSidebarProps> = ({ 
+  visible = true, 
+  onClose = () => {}, 
+  isMainSidebarExpanded = false 
+}) => {
   const [expandedItem, setExpandedItem] = useState<string>('');
   const navigate = useNavigate();
 
@@ -42,7 +46,6 @@ const SubSidebar: React.FC<SubSidebarProps> = ({ visible, onClose, isMainSidebar
     <div className={`sub-sidebar${isMainSidebarExpanded ? ' behind' : ''}`}> 
       <div className="sub-sidebar-header">
         <span>1학년 반</span>
-        <button className="close-btn" onClick={onClose}>×</button>
       </div>
       <ul className="sub-sidebar-menu">
         {menuItems.map(item => (

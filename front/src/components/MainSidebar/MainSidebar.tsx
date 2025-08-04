@@ -2,22 +2,26 @@ import React, { useState } from 'react';
 import './MainSidebar.css';
 
 interface MainSidebarProps {
-  onSelectItem: (item: string) => void;
-  selectedItem: string;
   isExpanded: boolean;
   onExpandChange: (expanded: boolean) => void;
+  onItemClick: (item: string) => void;
 }
 
-const MainSidebar: React.FC<MainSidebarProps> = ({ onSelectItem, selectedItem, isExpanded, onExpandChange }) => {
+const MainSidebar: React.FC<MainSidebarProps> = ({ isExpanded, onExpandChange, onItemClick }) => {
+  const [selectedItem, setSelectedItem] = useState('');
+  
   const menuItems = [
-    { id: 'grade1', label: '1학년', icon: '1' },
-    { id: 'grade2', label: '2학년', icon: '2' },
-    { id: 'grade3', label: '3학년', icon: '3' },
-    { id: 'schedule', label: '일정표', icon: '📅' }
+    { id: '1학년', label: '1학년', icon: '1' },
+    { id: '2학년', label: '2학년', icon: '2' },
+    { id: '3학년', label: '3학년', icon: '3' },
+    { id: '일정표', label: '일정표', icon: '📅' }
   ];
 
   const handleItemClick = (item: string) => {
-    onSelectItem(item);
+    setSelectedItem(item);
+    onItemClick(item);
+    // 클릭 시 사이드바 축소
+    onExpandChange(false);
   };
 
   return (

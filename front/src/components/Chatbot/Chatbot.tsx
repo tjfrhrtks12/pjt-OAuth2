@@ -25,14 +25,50 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      // 초기 높이 리셋
+      textarea.style.height = 'auto';
+      
+      // 정확한 스크롤 높이 계산
+      const scrollHeight = textarea.scrollHeight;
+      const lineHeight = parseInt(getComputedStyle(textarea).lineHeight);
+      const paddingTop = parseInt(getComputedStyle(textarea).paddingTop);
+      const paddingBottom = parseInt(getComputedStyle(textarea).paddingBottom);
+      
+      // 7줄 높이 계산 (패딩 포함)
+      const sevenLineHeight = (lineHeight * 7) + paddingTop + paddingBottom;
+      
+      if (scrollHeight > sevenLineHeight) {
+        // 8줄 이상일 때
+        textarea.style.height = `${sevenLineHeight}px`;
+        textarea.style.overflowY = 'auto';
+        // 스크롤바가 나타날 때 추가 패딩 적용
+        textarea.style.paddingRight = '20px';
+      } else {
+        // 7줄 이하일 때
+        textarea.style.height = `${scrollHeight}px`;
+        textarea.style.overflowY = 'hidden';
+        // 스크롤바가 없을 때 기본 패딩
+        textarea.style.paddingRight = '16px';
+      }
+    }
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [inputText]);
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
@@ -47,6 +83,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
     setIsTyping(true);
+
+    // 입력창 완전 초기화
+    if (textareaRef.current) {
+      textareaRef.current.style.height = '44px';
+      textareaRef.current.style.overflowY = 'hidden';
+      textareaRef.current.style.paddingRight = '16px';
+    }
 
     try {
       // 백엔드 API 호출
@@ -142,6 +185,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
             onKeyPress={handleKeyPress}
             placeholder="메시지를 입력하세요..."
             rows={1}
+            ref={textareaRef}
           />
           <button 
             onClick={handleSendMessage}

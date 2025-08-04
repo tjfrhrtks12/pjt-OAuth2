@@ -4,20 +4,19 @@ import './NavigationBar.css';
 
 interface User {
   id: number;
-  email: string;
+  login_id: string;
   name: string;
-  picture?: string;
+  is_active: boolean;
 }
 
 interface NavigationBarProps {
   onTAIClick: () => void;
-  onLogout: () => void;
-  user: User | null;
+  onLogout?: () => void;
+  user?: User | null;
 }
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ onTAIClick, onLogout, user }) => {
   const [isTAIActive, setIsTAIActive] = useState<boolean>(false);
-  const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleTAIClick = () => {
@@ -27,15 +26,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onTAIClick, onLogout, use
 
   const handleTzoneClick = () => {
     navigate('/main');
-  };
-
-  const handleUserMenuToggle = () => {
-    setShowUserMenu(!showUserMenu);
-  };
-
-  const handleLogoutClick = () => {
-    setShowUserMenu(false);
-    onLogout();
   };
 
   return (
@@ -59,37 +49,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onTAIClick, onLogout, use
           <span className="tai-icon">🤖</span>
           <span className="tai-text">TAI</span>
         </button>
-
-        <div className="user-menu-container">
-          <button 
-            className="user-menu-button"
-            onClick={handleUserMenuToggle}
-          >
-            {user?.picture ? (
-              <img 
-                src={user.picture} 
-                alt={user.name} 
-                className="user-avatar"
-              />
-            ) : (
-              <div className="user-avatar-placeholder">
-                {user?.name?.charAt(0) || 'U'}
-              </div>
-            )}
-          </button>
-
-          {showUserMenu && (
-            <div className="user-dropdown">
-              <button 
-                className="dropdown-item logout-button"
-                onClick={handleLogoutClick}
-              >
-                <span className="logout-icon">🚪</span>
-                로그아웃
-              </button>
-            </div>
-          )}
-        </div>
       </div>
     </nav>
   );
