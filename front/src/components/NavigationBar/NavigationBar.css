@@ -72,6 +72,25 @@
   gap: 15px;
 }
 
+.user-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #495057;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.user-title:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
 .tai-button {
   display: flex;
   align-items: center;
@@ -280,6 +299,11 @@
     width: 14px;
     height: 14px;
     padding: 0px;
+  }
+  
+  .user-title {
+    font-size: 0.85rem;
+    padding: 6px 12px;
   }
   
   .main-sidebar.expanded ~ .main-content-wrapper .navigation-bar {

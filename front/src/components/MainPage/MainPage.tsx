@@ -14,13 +14,14 @@ interface MainPageProps {
 
 const MainPage: React.FC<MainPageProps> = ({ isSidebarExpanded, onSidebarExpandChange }) => {
   const [isSubSidebarVisible, setIsSubSidebarVisible] = useState(false);
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   const handleSidebarSelect = (item: string) => {
     if (item === '1학년') {
       setIsSubSidebarVisible(true);
+    } else if (item === '일정표') {
+      navigate('/schedule');
     } else {
       setIsSubSidebarVisible(false);
     }
@@ -36,13 +37,7 @@ const MainPage: React.FC<MainPageProps> = ({ isSidebarExpanded, onSidebarExpandC
     navigate('/login');
   };
 
-  const handleTAIClick = () => {
-    setIsChatbotOpen(!isChatbotOpen);
-  };
 
-  const handleChatbotClose = () => {
-    setIsChatbotOpen(false);
-  };
 
   // 학교 일정 데이터
   const schoolEvents = [
@@ -108,8 +103,7 @@ const MainPage: React.FC<MainPageProps> = ({ isSidebarExpanded, onSidebarExpandC
       {isSubSidebarVisible && <SubSidebar />}
       
       <div className="main-content-wrapper">
-        <NavigationBar user={user} onLogout={handleLogout} onTAIClick={handleTAIClick} />
-        <Chatbot isOpen={isChatbotOpen} onClose={handleChatbotClose} />
+        <NavigationBar user={user} onLogout={handleLogout} />
         <div className="main-content">
           {/* 헤더 섹션 */}
           <div className="dashboard-header">

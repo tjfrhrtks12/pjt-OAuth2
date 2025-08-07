@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import './MainSidebar.css';
 
 interface MainSidebarProps {
@@ -9,6 +11,8 @@ interface MainSidebarProps {
 
 const MainSidebar: React.FC<MainSidebarProps> = ({ isExpanded, onExpandChange, onItemClick }) => {
   const [selectedItem, setSelectedItem] = useState('');
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   
   const menuItems = [
     { id: '1학년', label: '1학년', icon: '1' },
@@ -22,6 +26,11 @@ const MainSidebar: React.FC<MainSidebarProps> = ({ isExpanded, onExpandChange, o
     onItemClick(item);
     // 클릭 시 사이드바 축소
     onExpandChange(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -49,6 +58,20 @@ const MainSidebar: React.FC<MainSidebarProps> = ({ isExpanded, onExpandChange, o
           ))}
         </ul>
       </nav>
+      
+      {/* 로그아웃 버튼 */}
+      <div className="sidebar-footer">
+        <button 
+          className="logout-button"
+          onClick={handleLogout}
+          title="로그아웃"
+        >
+          <span className="sidebar-icon">⏻</span>
+          <span className={`sidebar-label ${isExpanded ? 'visible' : ''}`}>
+            로그아웃
+          </span>
+        </button>
+      </div>
     </div>
   );
 };

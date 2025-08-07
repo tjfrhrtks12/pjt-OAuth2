@@ -65,7 +65,7 @@ def create_default_users(db: Session):
         print(f"❌ 기본 사용자 생성 오류: {e}")
         db.rollback()
 
-@router.post("/api/login")
+@router.post("/login")
 async def login(login_request: LoginRequest, db: Session = Depends(get_db)):
     """간단한 로그인"""
     try:
@@ -98,7 +98,7 @@ async def login(login_request: LoginRequest, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"로그인 처리 중 오류: {str(e)}")
 
-@router.get("/api/users")
+@router.get("/users")
 async def get_all_users(db: Session = Depends(get_db)):
     """모든 사용자 조회"""
     try:
@@ -117,7 +117,7 @@ async def get_all_users(db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"사용자 조회 실패: {str(e)}")
 
-@router.post("/api/init-users")
+@router.post("/init-users")
 async def initialize_users(db: Session = Depends(get_db)):
     """기본 사용자 초기화"""
     try:

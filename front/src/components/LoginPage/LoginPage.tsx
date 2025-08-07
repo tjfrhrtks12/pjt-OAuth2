@@ -78,10 +78,10 @@ const LoginPage: React.FC = () => {
                 {isLoading ? (
                   <div className="loading-spinner">
                     <div className="spinner"></div>
-                    로그인 중...
+                    <span>로그인 중...</span>
                   </div>
                 ) : (
-                  '로그인'
+                  <span>로그인</span>
                 )}
               </button>
 

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from models import User, Class, Student, Grade, Subject, Exam
+from models import User, Class, Student, Grade, Subject, Exam, AttendanceType, AttendanceReason, Attendance, MonthlyAttendance, YearlyAttendance
 from config import SessionLocal
 from typing import List, Dict, Optional
 
@@ -394,5 +394,428 @@ class DatabaseService:
             return []
         finally:
             db.close()
+    
+    @staticmethod
+    def create_attendance_type(name: str, code: str, description: str = None) -> bool:
+        """출결 유형 생성"""
+        try:
+            with DatabaseService.get_session() as session:
+                new_attendance_type = AttendanceType(
+                    name=name,
+                    code=code,
+                    description=description
+                )
+                session.add(new_attendance_type)
+                session.commit()
+                return True
+        except Exception as e:
+            print(f"출결 유형 생성 실패: {e}")
+            return False
+
+    @staticmethod
+    def get_all_attendance_types():
+        """모든 출결 유형 조회"""
+        try:
+            with DatabaseService.get_session() as session:
+                attendance_types = session.query(AttendanceType).all()
+                return [
+                    {
+                        "id": at.id,
+                        "name": at.name,
+                        "code": at.code,
+                        "description": at.description
+                    } for at in attendance_types
+                ]
+        except Exception as e:
+            print(f"출결 유형 조회 실패: {e}")
+            return []
+
+    @staticmethod
+    def initialize_attendance_types():
+        """기본 출결 유형 초기화"""
+        try:
+            default_types = [
+                {"name": "출석", "code": "PRESENT", "description": "정상 출석"},
+                {"name": "결석", "code": "ABSENT", "description": "결석"},
+                {"name": "지각", "code": "LATE", "description": "지각"},
+                {"name": "조퇴", "code": "EARLY", "description": "조퇴"},
+                {"name": "공결", "code": "OFFICIAL", "description": "공식 결석"}
+            ]
+            
+            with DatabaseService.get_session() as session:
+                for type_data in default_types:
+                    existing = session.query(AttendanceType).filter(AttendanceType.code == type_data["code"]).first()
+                    if not existing:
+                        new_type = AttendanceType(**type_data)
+                        session.add(new_type)
+                
+                session.commit()
+                print("✅ 기본 출결 유형 초기화 완료!")
+                return True
+        except Exception as e:
+            print(f"❌ 출결 유형 초기화 실패: {e}")
+            return False
+    
+    @staticmethod
+    def create_attendance_reason(name: str, code: str, description: str = None) -> bool:
+        """결석 사유 생성"""
+        try:
+            with DatabaseService.get_session() as session:
+                new_attendance_reason = AttendanceReason(
+                    name=name,
+                    code=code,
+                    description=description
+                )
+                session.add(new_attendance_reason)
+                session.commit()
+                return True
+        except Exception as e:
+            print(f"결석 사유 생성 실패: {e}")
+            return False
+
+    @staticmethod
+    def get_all_attendance_reasons():
+        """모든 결석 사유 조회"""
+        try:
+            with DatabaseService.get_session() as session:
+                attendance_reasons = session.query(AttendanceReason).all()
+                return [
+                    {
+                        "id": ar.id,
+                        "name": ar.name,
+                        "code": ar.code,
+                        "description": ar.description
+                    } for ar in attendance_reasons
+                ]
+        except Exception as e:
+            print(f"결석 사유 조회 실패: {e}")
+            return []
+
+    @staticmethod
+    def initialize_attendance_reasons():
+        """기본 결석 사유 초기화"""
+        try:
+            default_reasons = [
+                {"name": "질병", "code": "ILLNESS", "description": "병원진단서, 의사소견서"},
+                {"name": "개인사", "code": "PERSONAL", "description": "개인적 사정"},
+                {"name": "가족사", "code": "FAMILY", "description": "가족 행사, 사고"},
+                {"name": "학교행사", "code": "SCHOOL", "description": "대회, 대표활동"},
+                {"name": "기타", "code": "OTHER", "description": "기타 사유"}
+            ]
+            
+            with DatabaseService.get_session() as session:
+                for reason_data in default_reasons:
+                    existing = session.query(AttendanceReason).filter(AttendanceReason.code == reason_data["code"]).first()
+                    if not existing:
+                        new_reason = AttendanceReason(**reason_data)
+                        session.add(new_reason)
+                
+                session.commit()
+                print("✅ 기본 결석 사유 초기화 완료!")
+                return True
+        except Exception as e:
+            print(f"❌ 결석 사유 초기화 실패: {e}")
+            return False
+    
+    @staticmethod
+    def create_attendance(student_id: int, type_id: int, date: str, reason_id: int = None, reason_detail: str = None, note: str = None) -> bool:
+        """출결 기록 생성"""
+        try:
+            with DatabaseService.get_session() as session:
+                new_attendance = Attendance(
+                    student_id=student_id,
+                    type_id=type_id,
+                    reason_id=reason_id,
+                    date=date,
+                    reason_detail=reason_detail,
+                    note=note
+                )
+                session.add(new_attendance)
+                session.commit()
+                return True
+        except Exception as e:
+            print(f"출결 기록 생성 실패: {e}")
+            return False
+
+    @staticmethod
+    def get_student_attendances(student_id: int, start_date: str = None, end_date: str = None):
+        """학생별 출결 기록 조회"""
+        try:
+            with DatabaseService.get_session() as session:
+                query = session.query(Attendance).filter(Attendance.student_id == student_id)
+                
+                if start_date:
+                    query = query.filter(Attendance.date >= start_date)
+                if end_date:
+                    query = query.filter(Attendance.date <= end_date)
+                
+                attendances = query.order_by(Attendance.date.desc()).all()
+                return [
+                    {
+                        "id": a.id,
+                        "student_id": a.student_id,
+                        "type_id": a.type_id,
+                        "reason_id": a.reason_id,
+                        "date": a.date.strftime("%Y-%m-%d"),
+                        "reason_detail": a.reason_detail,
+                        "note": a.note,
+                        "created_at": a.created_at.strftime("%Y-%m-%d %H:%M:%S")
+                    } for a in attendances
+                ]
+        except Exception as e:
+            print(f"학생 출결 기록 조회 실패: {e}")
+            return []
+
+    @staticmethod
+    def get_class_attendances(class_id: int, date: str = None):
+        """반별 출결 기록 조회"""
+        try:
+            with DatabaseService.get_session() as session:
+                query = session.query(Attendance).join(Student).filter(Student.class_id == class_id)
+                
+                if date:
+                    query = query.filter(Attendance.date == date)
+                
+                attendances = query.order_by(Attendance.date.desc()).all()
+                return [
+                    {
+                        "id": a.id,
+                        "student_id": a.student_id,
+                        "student_name": a.student.name,
+                        "type_id": a.type_id,
+                        "reason_id": a.reason_id,
+                        "date": a.date.strftime("%Y-%m-%d"),
+                        "reason_detail": a.reason_detail,
+                        "note": a.note
+                    } for a in attendances
+                ]
+        except Exception as e:
+            print(f"반 출결 기록 조회 실패: {e}")
+            return []
+    
+    @staticmethod
+    def create_monthly_attendance(student_id: int, year: int, month: int, total_days: int = 0, present_days: int = 0, absent_days: int = 0, late_days: int = 0, early_leave_days: int = 0) -> bool:
+        """월별 출결 통계 생성"""
+        try:
+            # 출석률 계산
+            attendance_rate = 0
+            if total_days > 0:
+                attendance_rate = int((present_days / total_days) * 100)
+            
+            with DatabaseService.get_session() as session:
+                # 기존 데이터 확인
+                existing = session.query(MonthlyAttendance).filter(
+                    MonthlyAttendance.student_id == student_id,
+                    MonthlyAttendance.year == year,
+                    MonthlyAttendance.month == month
+                ).first()
+                
+                if existing:
+                    # 기존 데이터 업데이트
+                    existing.total_days = total_days
+                    existing.present_days = present_days
+                    existing.absent_days = absent_days
+                    existing.late_days = late_days
+                    existing.early_leave_days = early_leave_days
+                    existing.attendance_rate = attendance_rate
+                else:
+                    # 새 데이터 생성
+                    new_monthly = MonthlyAttendance(
+                        student_id=student_id,
+                        year=year,
+                        month=month,
+                        total_days=total_days,
+                        present_days=present_days,
+                        absent_days=absent_days,
+                        late_days=late_days,
+                        early_leave_days=early_leave_days,
+                        attendance_rate=attendance_rate
+                    )
+                    session.add(new_monthly)
+                
+                session.commit()
+                return True
+        except Exception as e:
+            print(f"월별 출결 통계 생성 실패: {e}")
+            return False
+
+    @staticmethod
+    def get_student_monthly_attendance(student_id: int, year: int = None):
+        """학생별 월별 출결 통계 조회"""
+        try:
+            with DatabaseService.get_session() as session:
+                query = session.query(MonthlyAttendance).filter(MonthlyAttendance.student_id == student_id)
+                
+                if year:
+                    query = query.filter(MonthlyAttendance.year == year)
+                
+                monthly_attendances = query.order_by(MonthlyAttendance.year.desc(), MonthlyAttendance.month.desc()).all()
+                return [
+                    {
+                        "id": ma.id,
+                        "student_id": ma.student_id,
+                        "year": ma.year,
+                        "month": ma.month,
+                        "total_days": ma.total_days,
+                        "present_days": ma.present_days,
+                        "absent_days": ma.absent_days,
+                        "late_days": ma.late_days,
+                        "early_leave_days": ma.early_leave_days,
+                        "attendance_rate": ma.attendance_rate
+                    } for ma in monthly_attendances
+                ]
+        except Exception as e:
+            print(f"학생 월별 출결 통계 조회 실패: {e}")
+            return []
+
+    @staticmethod
+    def calculate_monthly_attendance(student_id: int, year: int, month: int) -> bool:
+        """월별 출결 통계 자동 계산"""
+        try:
+            with DatabaseService.get_session() as session:
+                # 해당 월의 출결 데이터 조회
+                start_date = f"{year}-{month:02d}-01"
+                if month == 12:
+                    end_date = f"{year+1}-01-01"
+                else:
+                    end_date = f"{year}-{month+1:02d}-01"
+                
+                attendances = session.query(Attendance).filter(
+                    Attendance.student_id == student_id,
+                    Attendance.date >= start_date,
+                    Attendance.date < end_date
+                ).all()
+                
+                # 통계 계산
+                total_days = len(attendances)
+                present_days = len([a for a in attendances if a.type_id == 1])  # 출석
+                absent_days = len([a for a in attendances if a.type_id == 2])   # 결석
+                late_days = len([a for a in attendances if a.type_id == 3])     # 지각
+                early_leave_days = len([a for a in attendances if a.type_id == 4])  # 조퇴
+                
+                # 월별 통계 생성/업데이트
+                return DatabaseService.create_monthly_attendance(
+                    student_id=student_id,
+                    year=year,
+                    month=month,
+                    total_days=total_days,
+                    present_days=present_days,
+                    absent_days=absent_days,
+                    late_days=late_days,
+                    early_leave_days=early_leave_days
+                )
+                
+        except Exception as e:
+            print(f"월별 출결 통계 계산 실패: {e}")
+            return False
+    
+    @staticmethod
+    def create_yearly_attendance(student_id: int, year: int, total_days: int = 0, present_days: int = 0, absent_days: int = 0, late_days: int = 0, early_leave_days: int = 0) -> bool:
+        """연도별 출결 통계 생성"""
+        try:
+            # 출석률 계산
+            attendance_rate = 0
+            if total_days > 0:
+                attendance_rate = int((present_days / total_days) * 100)
+            
+            with DatabaseService.get_session() as session:
+                # 기존 데이터 확인
+                existing = session.query(YearlyAttendance).filter(
+                    YearlyAttendance.student_id == student_id,
+                    YearlyAttendance.year == year
+                ).first()
+                
+                if existing:
+                    # 기존 데이터 업데이트
+                    existing.total_days = total_days
+                    existing.present_days = present_days
+                    existing.absent_days = absent_days
+                    existing.late_days = late_days
+                    existing.early_leave_days = early_leave_days
+                    existing.attendance_rate = attendance_rate
+                else:
+                    # 새 데이터 생성
+                    new_yearly = YearlyAttendance(
+                        student_id=student_id,
+                        year=year,
+                        total_days=total_days,
+                        present_days=present_days,
+                        absent_days=absent_days,
+                        late_days=late_days,
+                        early_leave_days=early_leave_days,
+                        attendance_rate=attendance_rate
+                    )
+                    session.add(new_yearly)
+                
+                session.commit()
+                return True
+        except Exception as e:
+            print(f"연도별 출결 통계 생성 실패: {e}")
+            return False
+
+    @staticmethod
+    def get_student_yearly_attendance(student_id: int, year: int = None):
+        """학생별 연도별 출결 통계 조회"""
+        try:
+            with DatabaseService.get_session() as session:
+                query = session.query(YearlyAttendance).filter(YearlyAttendance.student_id == student_id)
+                
+                if year:
+                    query = query.filter(YearlyAttendance.year == year)
+                
+                yearly_attendances = query.order_by(YearlyAttendance.year.desc()).all()
+                return [
+                    {
+                        "id": ya.id,
+                        "student_id": ya.student_id,
+                        "year": ya.year,
+                        "total_days": ya.total_days,
+                        "present_days": ya.present_days,
+                        "absent_days": ya.absent_days,
+                        "late_days": ya.late_days,
+                        "early_leave_days": ya.early_leave_days,
+                        "attendance_rate": ya.attendance_rate
+                    } for ya in yearly_attendances
+                ]
+        except Exception as e:
+            print(f"학생 연도별 출결 통계 조회 실패: {e}")
+            return []
+
+    @staticmethod
+    def calculate_yearly_attendance(student_id: int, year: int) -> bool:
+        """연도별 출결 통계 자동 계산"""
+        try:
+            with DatabaseService.get_session() as session:
+                # 해당 연도의 출결 데이터 조회
+                start_date = f"{year}-01-01"
+                end_date = f"{year+1}-01-01"
+                
+                attendances = session.query(Attendance).filter(
+                    Attendance.student_id == student_id,
+                    Attendance.date >= start_date,
+                    Attendance.date < end_date
+                ).all()
+                
+                # 통계 계산
+                total_days = len(attendances)
+                present_days = len([a for a in attendances if a.type_id == 1])  # 출석
+                absent_days = len([a for a in attendances if a.type_id == 2])   # 결석
+                late_days = len([a for a in attendances if a.type_id == 3])     # 지각
+                early_leave_days = len([a for a in attendances if a.type_id == 4])  # 조퇴
+                
+                # 연도별 통계 생성/업데이트
+                return DatabaseService.create_yearly_attendance(
+                    student_id=student_id,
+                    year=year,
+                    total_days=total_days,
+                    present_days=present_days,
+                    absent_days=absent_days,
+                    late_days=late_days,
+                    early_leave_days=early_leave_days
+                )
+                
+        except Exception as e:
+            print(f"연도별 출결 통계 계산 실패: {e}")
+            return False
     
  

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import axios from 'axios';
+import { useChat } from './ChatContext';
 
 interface User {
   id: number;
@@ -33,6 +34,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { resetChat } = useChat();
 
   // API 기본 설정
   axios.defaults.baseURL = 'http://localhost:8000';
@@ -82,6 +84,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('user');
+    resetChat(); // 챗봇 초기화 및 닫기
     console.log('AuthContext - 로그아웃 완료');
   };
 

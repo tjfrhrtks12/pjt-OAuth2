@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useChat } from '../../contexts/ChatContext';
+import { useAuth } from '../../contexts/AuthContext';
 import './Chatbot.css';
 
 interface Message {
@@ -8,20 +10,9 @@ interface Message {
   timestamp: Date;
 }
 
-interface ChatbotProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: "안녕하세요! AI 어시스턴트입니다. 무엇을 도와드릴까요? 🤖",
-      isUser: false,
-      timestamp: new Date()
-    }
-  ]);
+const Chatbot: React.FC = () => {
+  const { isChatbotOpen: isOpen, messages, closeChat: onClose, addMessage, triggerEventUpdate } = useChat();
+  const { user } = useAuth();
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -70,6 +61,51 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
     adjustTextareaHeight();
   }, [inputText]);
 
+  // 일정 추가/삭제/수정 관련 키워드 체크
+  const checkForEventUpdate = (responseText: string) => {
+    const eventKeywords = [
+      // 일정 추가 관련
+      '일정이 성공적으로 등록되었습니다',
+      '일정을 추가했습니다',
+      '일정이 추가되었습니다',
+      '일정을 생성했습니다',
+      '일정이 생성되었습니다',
+      '캘린더에 추가했습니다',
+      '캘린더에 등록했습니다',
+      '일정을 등록했습니다',
+      '일정이 등록되었습니다',
+      '성공적으로 등록되었습니다',
+      '등록되었습니다',
+      
+      // 일정 삭제 관련
+      '일정이 성공적으로 삭제되었습니다',
+      '일정을 삭제했습니다',
+      '일정이 삭제되었습니다',
+      '캘린더에서 삭제했습니다',
+      '캘린더에서 제거했습니다',
+      '일정을 제거했습니다',
+      '일정이 제거되었습니다',
+      '성공적으로 삭제되었습니다',
+      '삭제되었습니다',
+      '제거되었습니다',
+      
+      // 일정 수정 관련
+      '일정이 성공적으로 수정되었습니다',
+      '일정을 수정했습니다',
+      '일정이 수정되었습니다',
+      '일정을 변경했습니다',
+      '일정이 변경되었습니다',
+      '캘린더에서 수정했습니다',
+      '캘린더에서 변경했습니다',
+      '성공적으로 수정되었습니다',
+      '수정되었습니다',
+      '변경되었습니다',
+      '업데이트되었습니다'
+    ];
+    
+    return eventKeywords.some(keyword => responseText.includes(keyword));
+  };
+
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
@@ -80,7 +116,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    addMessage(userMessage);
     setInputText('');
     setIsTyping(true);
 
@@ -92,6 +128,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
     }
 
     try {
+      console.log('챗봇 API 호출 시작:', inputText);
+      
       // 백엔드 API 호출
       const response = await fetch('http://localhost:8000/api/chat', {
         method: 'POST',
@@ -99,31 +137,49 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          message: inputText
+          message: inputText,
+          user_id: user?.id || 1
         })
       });
 
-      const data = await response.json();
-      
-      if (data.success) {
-        const aiMessage: Message = {
+      if (!response.ok) {
+        throw new Error('챗봇 응답 실패');
+      }
+
+      const result = await response.json();
+      console.log('챗봇 API 응답:', result);
+
+      if (result.success) {
+        const botMessage: Message = {
           id: Date.now() + 1,
-          text: data.response,
+          text: result.response,
           isUser: false,
           timestamp: new Date()
         };
-        setMessages(prev => [...prev, aiMessage]);
+
+        addMessage(botMessage);
+
+        // 일정 추가 관련 응답인지 확인하고 캘린더 업데이트
+        if (checkForEventUpdate(result.response)) {
+          console.log('일정 추가/삭제/수정 감지, 캘린더 업데이트 트리거');
+          setTimeout(() => {
+            triggerEventUpdate();
+          }, 1000); // 1초 후 업데이트 (사용자가 응답을 볼 수 있도록)
+        }
       } else {
-        throw new Error('AI 응답을 받지 못했습니다.');
+        throw new Error(result.error || '챗봇 응답 오류');
       }
     } catch (error) {
+      console.error('챗봇 API 호출 실패:', error);
+      
       const errorMessage: Message = {
         id: Date.now() + 1,
-        text: "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        text: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해주세요.',
         isUser: false,
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, errorMessage]);
+
+      addMessage(errorMessage);
     } finally {
       setIsTyping(false);
     }

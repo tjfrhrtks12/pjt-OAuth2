@@ -1,0 +1,155 @@
+// School Management System Database Schema
+// Generated from SQLAlchemy models
+
+Table users {
+  id integer [primary key, increment]
+  login_id varchar(100) [unique, not null, note: '로그인 ID']
+  name varchar(255) [not null, note: '사용자 이름']
+  login_pw varchar(255) [not null, note: '로그인 비밀번호']
+  is_active boolean [default: true, note: '활성화 상태']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+  
+  indexes {
+    (login_id)
+  }
+}
+
+Table classes {
+  id integer [primary key, increment]
+  academic_year integer [not null, note: '학년도 (2022, 2023, 2024)']
+  grade integer [not null, note: '학년 (1, 2, 3)']
+  class_num integer [not null, note: '반 번호 (1, 2, 3, ...)']
+  teacher_id integer [not null, ref: > users.id, note: '담임 선생님']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+  
+  indexes {
+    (academic_year, grade, class_num) [unique, note: '같은 학년에 같은 반 번호 중복 방지']
+  }
+}
+
+Table students {
+  id integer [primary key, increment]
+  name varchar(50) [not null, note: '학생 이름']
+  class_id integer [not null, ref: > classes.id, note: '소속 반']
+  academic_year integer [not null, note: '학년도']
+  birth_year integer [note: '출생연도']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table subjects {
+  id integer [primary key, increment]
+  name varchar(50) [not null, note: '과목명 (국어, 수학, 사회, 과학, 영어)']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table exams {
+  id integer [primary key, increment]
+  name varchar(100) [not null, note: '시험명 (1학기중간고사, 1학기기말고사 등)']
+  semester integer [not null, note: '학기 (1, 2)']
+  type varchar(20) [not null, note: '시험 유형 (midterm, final)']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table grades {
+  id integer [primary key, increment]
+  student_id integer [not null, ref: > students.id, note: '학생 ID']
+  subject_id integer [not null, ref: > subjects.id, note: '과목 ID']
+  exam_id integer [not null, ref: > exams.id, note: '시험 ID']
+  academic_year integer [not null, note: '학년도']
+  score integer [not null, note: '점수 (0-100점)']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table attendance_types {
+  id integer [primary key, increment]
+  name varchar(50) [not null, note: '출석 유형명 (출석, 결석, 지각, 조퇴, 공결)']
+  code varchar(20) [unique, not null, note: '출석 코드 (PRESENT, ABSENT, LATE, EARLY, OFFICIAL)']
+  description varchar(200) [note: '상세 설명']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table attendance_reasons {
+  id integer [primary key, increment]
+  name varchar(50) [not null, note: '결석 사유명 (질병, 개인사, 가족사, 학교행사, 기타)']
+  code varchar(20) [unique, not null, note: '결석 코드 (ILLNESS, PERSONAL, FAMILY, SCHOOL, OTHER)']
+  description varchar(200) [note: '상세 설명']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table attendances {
+  id integer [primary key, increment]
+  student_id integer [not null, ref: > students.id, note: '학생 ID']
+  date date [not null, note: '출석 날짜']
+  type_id integer [not null, ref: > attendance_types.id, note: '출석 유형']
+  reason_id integer [ref: > attendance_reasons.id, note: '결석 사유']
+  academic_year integer [not null, note: '학년도']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table monthly_attendances {
+  id integer [primary key, increment]
+  student_id integer [not null, ref: > students.id, note: '학생 ID']
+  year integer [not null, note: '연도']
+  month integer [not null, note: '월 (1-12)']
+  total_days integer [default: 0, note: '총 일수']
+  present_days integer [default: 0, note: '출석 일수']
+  absent_days integer [default: 0, note: '결석 일수']
+  late_days integer [default: 0, note: '지각 일수']
+  early_leave_days integer [default: 0, note: '조퇴 일수']
+  attendance_rate integer [default: 0, note: '출석률 (0-100)']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table yearly_attendances {
+  id integer [primary key, increment]
+  student_id integer [not null, ref: > students.id, note: '학생 ID']
+  year integer [not null, note: '연도']
+  total_days integer [default: 0, note: '총 일수']
+  present_days integer [default: 0, note: '출석 일수']
+  absent_days integer [default: 0, note: '결석 일수']
+  late_days integer [default: 0, note: '지각 일수']
+  early_leave_days integer [default: 0, note: '조퇴 일수']
+  attendance_rate integer [default: 0, note: '출석률 (0-100)']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+Table calendar_events {
+  id integer [primary key, increment]
+  user_id integer [not null, ref: > users.id, note: '사용자 ID']
+  title varchar(255) [not null, note: '일정 제목']
+  description text [note: '일정 설명']
+  start_date date [not null, note: '시작 날짜']
+  end_date date [not null, note: '종료 날짜']
+  start_time time [note: '시작 시간']
+  end_time time [note: '종료 시간']
+  event_type varchar(50) [not null, note: '일정 유형 (수업, 시험, 상담, 행사, 개인일정)']
+  color varchar(20) [default: '#3788d8', note: '일정 색상']
+  is_all_day boolean [default: false, note: '종일 일정 여부']
+  location varchar(255) [note: '장소']
+  created_at timestamp [default: `now()`, note: '생성일시']
+  updated_at timestamp [note: '수정일시']
+}
+
+// Relationships
+Ref: classes.teacher_id > users.id
+Ref: students.class_id > classes.id
+Ref: grades.student_id > students.id
+Ref: grades.subject_id > subjects.id
+Ref: grades.exam_id > exams.id
+Ref: attendances.student_id > students.id
+Ref: attendances.type_id > attendance_types.id
+Ref: attendances.reason_id > attendance_reasons.id
+Ref: monthly_attendances.student_id > students.id
+Ref: yearly_attendances.student_id > students.id
+Ref: calendar_events.user_id > users.id 

@@ -1,0 +1,1043 @@
+{
+  "attendance_reasons": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "description",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [],
+    "indexes": [
+      {
+        "name": "code",
+        "column_names": [
+          "code"
+        ],
+        "unique": true,
+        "type": "UNIQUE"
+      }
+    ]
+  },
+  "attendance_types": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "description",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [],
+    "indexes": [
+      {
+        "name": "code",
+        "column_names": [
+          "code"
+        ],
+        "unique": true,
+        "type": "UNIQUE"
+      }
+    ]
+  },
+  "attendances": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "student_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "type_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "reason_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "date",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "reason_detail",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "note",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "academic_year",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [
+      {
+        "name": "attendances_ibfk_1",
+        "constrained_columns": [
+          "student_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "students",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      },
+      {
+        "name": "attendances_ibfk_2",
+        "constrained_columns": [
+          "type_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "attendance_types",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      },
+      {
+        "name": "attendances_ibfk_3",
+        "constrained_columns": [
+          "reason_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "attendance_reasons",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      }
+    ],
+    "indexes": [
+      {
+        "name": "reason_id",
+        "column_names": [
+          "reason_id"
+        ],
+        "unique": false
+      },
+      {
+        "name": "student_id",
+        "column_names": [
+          "student_id"
+        ],
+        "unique": false
+      },
+      {
+        "name": "type_id",
+        "column_names": [
+          "type_id"
+        ],
+        "unique": false
+      }
+    ]
+  },
+  "calendar_events": {
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "title",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "description",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "start_date",
+        "type": "DATE",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "end_date",
+        "type": "DATE",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "start_time",
+        "type": "TIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "end_time",
+        "type": "TIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "event_type",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "color",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "is_all_day",
+        "type": "TINYINT",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "location",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [
+      {
+        "name": "calendar_events_ibfk_1",
+        "constrained_columns": [
+          "user_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "users",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      }
+    ],
+    "indexes": [
+      {
+        "name": "ix_calendar_events_id",
+        "column_names": [
+          "id"
+        ],
+        "unique": false
+      },
+      {
+        "name": "user_id",
+        "column_names": [
+          "user_id"
+        ],
+        "unique": false
+      }
+    ]
+  },
+  "classes": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "academic_year",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": "'2024'",
+        "primary_key": false
+      },
+      {
+        "name": "grade",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "class_num",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "teacher_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [
+      {
+        "name": "classes_ibfk_1",
+        "constrained_columns": [
+          "teacher_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "users",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      }
+    ],
+    "indexes": [
+      {
+        "name": "ix_classes_id",
+        "column_names": [
+          "id"
+        ],
+        "unique": false
+      },
+      {
+        "name": "teacher_id",
+        "column_names": [
+          "teacher_id"
+        ],
+        "unique": false
+      }
+    ]
+  },
+  "exams": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "semester",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "type",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [],
+    "indexes": []
+  },
+  "grades": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "student_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "subject_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "exam_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "academic_year",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "score",
+        "type": "DECIMAL(5, 2)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [
+      {
+        "name": "grades_ibfk_1",
+        "constrained_columns": [
+          "student_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "students",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      },
+      {
+        "name": "grades_ibfk_2",
+        "constrained_columns": [
+          "subject_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "subjects",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      },
+      {
+        "name": "grades_ibfk_3",
+        "constrained_columns": [
+          "exam_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "exams",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      }
+    ],
+    "indexes": [
+      {
+        "name": "exam_id",
+        "column_names": [
+          "exam_id"
+        ],
+        "unique": false
+      },
+      {
+        "name": "student_id",
+        "column_names": [
+          "student_id"
+        ],
+        "unique": false
+      },
+      {
+        "name": "subject_id",
+        "column_names": [
+          "subject_id"
+        ],
+        "unique": false
+      }
+    ]
+  },
+  "monthly_attendances": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "student_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "year",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "month",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "total_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "present_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "absent_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "late_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "early_leave_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "attendance_rate",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [
+      {
+        "name": "monthly_attendances_ibfk_1",
+        "constrained_columns": [
+          "student_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "students",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      }
+    ],
+    "indexes": [
+      {
+        "name": "student_id",
+        "column_names": [
+          "student_id"
+        ],
+        "unique": false
+      }
+    ]
+  },
+  "students": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "academic_year",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "class_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "birth_year",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [
+      {
+        "name": "students_ibfk_1",
+        "constrained_columns": [
+          "class_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "classes",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      }
+    ],
+    "indexes": [
+      {
+        "name": "class_id",
+        "column_names": [
+          "class_id"
+        ],
+        "unique": false
+      }
+    ]
+  },
+  "subjects": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [],
+    "indexes": []
+  },
+  "users": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(255)",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "is_active",
+        "type": "TINYINT",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "login_id",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "login_pw",
+        "type": "VARCHAR(255)",
+        "nullable": true,
+        "default": null,
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [],
+    "indexes": [
+      {
+        "name": "ix_users_id",
+        "column_names": [
+          "id"
+        ],
+        "unique": false
+      },
+      {
+        "name": "login_id",
+        "column_names": [
+          "login_id"
+        ],
+        "unique": true,
+        "type": "UNIQUE"
+      }
+    ]
+  },
+  "yearly_attendances": {
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "student_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "year",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null,
+        "primary_key": false
+      },
+      {
+        "name": "total_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "present_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "absent_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "late_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "early_leave_days",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "attendance_rate",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "'0'",
+        "primary_key": false
+      },
+      {
+        "name": "created_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP",
+        "primary_key": false
+      },
+      {
+        "name": "updated_at",
+        "type": "TIMESTAMP",
+        "nullable": false,
+        "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        "primary_key": false
+      }
+    ],
+    "primary_keys": [],
+    "foreign_keys": [
+      {
+        "name": "yearly_attendances_ibfk_1",
+        "constrained_columns": [
+          "student_id"
+        ],
+        "referred_schema": null,
+        "referred_table": "students",
+        "referred_columns": [
+          "id"
+        ],
+        "options": {}
+      }
+    ],
+    "indexes": [
+      {
+        "name": "student_id",
+        "column_names": [
+          "student_id"
+        ],
+        "unique": false
+      }
+    ]
+  }
+}
